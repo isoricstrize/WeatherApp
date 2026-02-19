@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+
+# SQLite databases
+*.db
+
+# Seeder import files
+CitySeederCli/SeedData/*.txt
