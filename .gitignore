@@ -6,3 +6,6 @@
 
 # Seeder import files
 CitySeederCli/SeedData/*.txt
+
+bin/
+obj/
