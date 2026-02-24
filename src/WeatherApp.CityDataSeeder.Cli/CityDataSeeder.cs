@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CityDataSeederCLI.Data;
-using CityDataSeederCLI.Models;
+using WeatherApp.CityDataSeeder.Cli.Data;
+using WeatherApp.CityDataSeeder.Cli.Models;
 
-namespace CityDataSeederCLI.Seeder
+namespace WeatherApp.CityDataSeeder.Cli.Seeder
 {
     public class CityDataSeeder(DatabaseManager dbManager)
     {

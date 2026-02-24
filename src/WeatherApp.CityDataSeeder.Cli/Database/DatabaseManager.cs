@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CityDataSeederCLI.Models;
+using WeatherApp.CityDataSeeder.Cli.Models;
 using Microsoft.Data.Sqlite;
 
 
-namespace CityDataSeederCLI.Data
+namespace WeatherApp.CityDataSeeder.Cli.Data
 {
     public class DatabaseManager(string connectionString)
     {
