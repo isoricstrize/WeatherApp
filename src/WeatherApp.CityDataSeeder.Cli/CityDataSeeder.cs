@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WeatherApp.CityDataSeeder.Cli.Data;
-using WeatherApp.CityDataSeeder.Cli.Models;
+using WeatherApp.Domain.Entities;
 
 namespace WeatherApp.CityDataSeeder.Cli.Seeder
 {

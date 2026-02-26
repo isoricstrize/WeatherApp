@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WeatherApp.CityDataSeeder.Cli.Models;
+using WeatherApp.Domain.Entities;
 using Microsoft.Data.Sqlite;
 
 
