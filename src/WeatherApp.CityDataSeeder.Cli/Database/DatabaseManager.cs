@@ -8,9 +8,14 @@ using Microsoft.Data.Sqlite;
 
 namespace WeatherApp.CityDataSeeder.Cli.Data
 {
-    public class DatabaseManager(string connectionString)
+    public class DatabaseManager
     {
-        private readonly string _connectionString = connectionString;
+        private readonly string _connectionString;
+
+        public DatabaseManager(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
 
         public void CreateDatabase()
         {

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WeatherApp.WebApi.Data;
 using Scalar.AspNetCore;
 using WeatherApp.WebApi.Services;
+using WeatherApp.WebApi.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,9 @@ builder.Services.AddOpenApi();
 // Register DbContext
 builder.Services.AddDbContext<CitiesDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register ICityService (it will be created with every request)
+builder.Services.AddScoped<ICityService, CityService>();
 
 // Register Weather Service to typed HttpClient class (with specified configuration)
 // This registration uses a factory method to create an instance of HttpClient and

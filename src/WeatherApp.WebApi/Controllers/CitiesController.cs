@@ -6,22 +6,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WeatherApp.Domain.Entities;
 using WeatherApp.WebApi.Data;
+using WeatherApp.WebApi.Services.Interfaces;
 
 namespace WeatherApp.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CitiesController(CitiesDbContext dbContext) : ControllerBase
+    public class CitiesController : ControllerBase
     {
-        private readonly CitiesDbContext _dbContext = dbContext;
+        private readonly ICityService _cityService;
+
+        public CitiesController(ICityService cityService)
+        {
+            _cityService = cityService;
+        }
 
         // id -> geoNameId
         [HttpGet("{id}")]
         public async Task<ActionResult<City>> GetCityById(int id)
         {
-            var city = await _dbContext.Cities.FindAsync(id);
+            var city = await _cityService.GetCityByIdAsync(id);
 
-            if (city is null) return NotFound();
+            if (city is null)
+                return NotFound();
 
             return Ok(city);
         }

@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using WeatherApp.Domain.Entities;
 using WeatherApp.WebApi.Entities;
 
-namespace WeatherApp.WebApi.Services
+namespace WeatherApp.WebApi.Services.Interfaces
 {
     public interface IWeatherService
     {
-        Task</*WeatherResponse?*/string> GetWeatherAsync(double latitude, double longitude);
+        Task</*WeatherResponse?*/string> GetWeatherForCityByIdAsync(int cityId);
     }
 }

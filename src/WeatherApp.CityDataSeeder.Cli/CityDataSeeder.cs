@@ -7,9 +7,14 @@ using WeatherApp.Domain.Entities;
 
 namespace WeatherApp.CityDataSeeder.Cli.Seeder
 {
-    public class CityDataSeeder(DatabaseManager dbManager)
+    public class CityDataSeeder
     {
-        private readonly DatabaseManager _dbManager = dbManager;
+        private readonly DatabaseManager _dbManager;
+
+        public CityDataSeeder(DatabaseManager dbManager)
+        {
+            _dbManager = dbManager;
+        }
 
         public void Seed(string filePath)
         {
