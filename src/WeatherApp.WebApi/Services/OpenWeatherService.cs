@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using WeatherApp.Domain.Entities;
 using WeatherApp.WebApi.DTOs;
 using WeatherApp.WebApi.Models;
@@ -13,12 +14,14 @@ namespace WeatherApp.WebApi.Services
     public class OpenWeatherService : IWeatherService
     {
         private readonly HttpClient _httpClient;
+        private readonly IMemoryCache _cache;
         private readonly string _apiKey;
         private readonly ICityService _cityService;
 
-        public OpenWeatherService(HttpClient httpClient, IConfiguration configuration, ICityService cityService)
+        public OpenWeatherService(HttpClient httpClient, IMemoryCache cache, IConfiguration configuration, ICityService cityService)
         {
             _httpClient = httpClient;
+            _cache = cache;
             _apiKey = configuration["OpenWeather:ApiKey"] ?? throw new InvalidOperationException("OpenWeather API key is missing.");
             _cityService = cityService;
 
@@ -26,13 +29,20 @@ namespace WeatherApp.WebApi.Services
 
         public async Task<WeatherResponseDto?> GetCurrentWeatherAsync(int cityId)
         {
+            // Try get weather data from cache first
+            string cacheKey = $"weather_{cityId}";
+            if (_cache.TryGetValue(cacheKey, out WeatherResponseDto? cachedWeather))
+            {
+                Console.WriteLine("Cached weather returned!");
+                return cachedWeather;
+            }
+
             var city = await _cityService.GetCityByIdAsync(cityId);
 
             if (city is null)
                 return null;
 
             var url = $"data/2.5/weather?lat={city.Latitude}&lon={city.Longitude}&appid={_apiKey}";
-
             var response = await _httpClient.GetAsync(url);
 
             if (!response.IsSuccessStatusCode)
@@ -49,7 +59,7 @@ namespace WeatherApp.WebApi.Services
                 return null;
 
             // Mapping (WeatherResponse -> WeatherResponseDto)
-            return new WeatherResponseDto
+            var result = new WeatherResponseDto
             {
                 City = weather.Name,
                 Country = weather.Sys.Country,
@@ -61,10 +71,27 @@ namespace WeatherApp.WebApi.Services
                 WindSpeed = weather.Wind.Speed
             };
 
+            // Save To Cache (10 minutes)
+            // Each cached item = size 1 -> SizeLimit is set to 100 in program.cs (cache can hold 100 items)
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(10)) // Store this data for 10 minutes -> ater that automatically remove it
+                .SetSize(1);
+
+            _cache.Set(cacheKey, result, cacheOptions);
+
+            return result;
         }
 
         public async Task<ForecastResponseDto?> GetForecastWeatherAsync(int cityId)
         {
+            // Try get forecast data from cache first
+            string cacheKey = $"forecast_{cityId}";
+            if (_cache.TryGetValue(cacheKey, out ForecastResponseDto? cachedForecast))
+            {
+                Console.WriteLine("Cached forecast returned!");
+                return cachedForecast;
+            }
+
             var city = await _cityService.GetCityByIdAsync(cityId);
 
             if (city is null)
@@ -106,12 +133,22 @@ namespace WeatherApp.WebApi.Services
                 })
                 .ToList();
 
-            return new ForecastResponseDto
+            var result = new ForecastResponseDto
             {
                 City = forecast.City.Name,
                 Country = forecast.City.Country,
                 Forecasts = dailyForecasts
             };
+
+            // Save To Cache (30 minutes)
+            // Each cached item = size 1 -> SizeLimit is set to 100 in program.cs (cache can hold 100 items)
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(30)) // Store this data for 30 minutes -> ater that automatically remove it
+                .SetSize(1);
+
+            _cache.Set(cacheKey, result, cacheOptions);
+
+            return result;
         }
     }
 }

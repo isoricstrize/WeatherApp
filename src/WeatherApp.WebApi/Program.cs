@@ -8,6 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+// Enabling IMemoryCache
+// The total allowed cache size is 100 units
+builder.Services.AddMemoryCache(options =>
+{
+    options.SizeLimit = 100;
+});
+
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
