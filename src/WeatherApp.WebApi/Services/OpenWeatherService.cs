@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using WeatherApp.Domain.Entities;
-using WeatherApp.WebApi.Entities;
+using WeatherApp.WebApi.DTOs;
+using WeatherApp.WebApi.Models;
 using WeatherApp.WebApi.Services.Interfaces;
 
 namespace WeatherApp.WebApi.Services
@@ -23,12 +24,12 @@ namespace WeatherApp.WebApi.Services
 
         }
 
-        public async Task<string> GetWeatherForCityByIdAsync(int cityId)
+        public async Task<WeatherResponseDto?> GetCurrentWeatherAsync(int cityId)
         {
             var city = await _cityService.GetCityByIdAsync(cityId);
 
             if (city is null)
-                return "";
+                return null;
 
             var url = $"data/2.5/weather?lat={city.Latitude}&lon={city.Longitude}&appid={_apiKey}";
 
@@ -38,62 +39,81 @@ namespace WeatherApp.WebApi.Services
             {
                 var error = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(error);
-                return "";
+                return null;
             }
 
             var content = await response.Content.ReadAsStringAsync();
-            return content;//JsonSerializer.Deserialize<WeatherResponse>(content);
+            var weather = JsonSerializer.Deserialize<WeatherResponse>(content);
+
+            if (weather is null)
+                return null;
+
+            // Mapping (WeatherResponse -> WeatherResponseDto)
+            return new WeatherResponseDto
+            {
+                City = weather.Name,
+                Country = weather.Sys.Country,
+                Temperature = weather.Main.Temp,
+                FeelsLike = weather.Main.FeelsLike,
+                Description = weather.Weather.FirstOrDefault()?.Description ?? "",
+                Icon = weather.Weather.FirstOrDefault()?.Icon ?? "",
+                Humidity = weather.Main.Humidity,
+                WindSpeed = weather.Wind.Speed
+            };
 
         }
 
+        public async Task<ForecastResponseDto?> GetForecastWeatherAsync(int cityId)
+        {
+            var city = await _cityService.GetCityByIdAsync(cityId);
+
+            if (city is null)
+                return null;
+
+            var url = $"data/2.5/forecast?lat={city.Latitude}&lon={city.Longitude}&appid={_apiKey}";
+
+            var response = await _httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(error);
+                return null;
+            }
+
+            var content = await response.Content.ReadAsStringAsync();
+            var forecast = JsonSerializer.Deserialize<ForecastResponse>(content);
+
+            if (forecast is null)
+                return null;
+
+            var dailyForecasts = forecast!.ForecastItems
+                .GroupBy(x => DateTime.Parse(x.DateText).Date)
+                .Select(group =>
+                {
+                    var first = group.First();
+
+                    return new DailyForecastDto
+                    {
+                        Date = group.Key,
+                        Temperature = group.Average(x => x.Main.Temp), // or First().Main.Temp
+                        FeelsLike = group.Average(x => x.Main.FeelsLike),
+                        Description = first.Weather.FirstOrDefault()?.Description ?? "",
+                        Humidity = (int)group.Average(x => x.Main.Humidity),
+                        WindSpeed = group.Average(x => x.Wind.Speed),
+                        Icon = first.Weather.FirstOrDefault()?.Icon ?? ""
+                    };
+                })
+                .ToList();
+
+            return new ForecastResponseDto
+            {
+                City = forecast.City.Name,
+                Country = forecast.City.Country,
+                Forecasts = dailyForecasts
+            };
+        }
     }
 }
 
 
-/*
-{
-  "coord": {
-    "lon": 16.441,
-    "lat": 43.507
-  },
-  "weather": [
-    {
-      "id": 804,
-      "main": "Clouds",
-      "description": "overcast clouds",
-      "icon": "04d"
-    }
-  ],
-  "base": "stations",
-  "main": {
-    "temp": 284.17,
-    "feels_like": 283.6,
-    "temp_min": 284.17,
-    "temp_max": 284.17,
-    "pressure": 1026,
-    "humidity": 87,
-    "sea_level": 1026,
-    "grnd_level": 1003
-  },
-  "visibility": 10000,
-  "wind": {
-    "speed": 2.57,
-    "deg": 10
-  },
-  "clouds": {
-    "all": 100
-  },
-  "dt": 1772457088,
-  "sys": {
-    "type": 1,
-    "id": 6387,
-    "country": "HR",
-    "sunrise": 1772429382,
-    "sunset": 1772469810
-  },
-  "timezone": 3600,
-  "id": 3190261,
-  "name": "Split",
-  "cod": 200
-}
-*/

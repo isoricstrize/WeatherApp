@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WeatherApp.Domain.Entities;
+using WeatherApp.WebApi.DTOs;
 using WeatherApp.WebApi.Services.Interfaces;
 
 namespace WeatherApp.WebApi.Controllers
@@ -19,10 +20,21 @@ namespace WeatherApp.WebApi.Controllers
             _weatherService = weatherService;
         }
 
-        [HttpGet("city/{id}")]
-        public async Task<ActionResult<string>> GetWeatherForCity(int id)
+        [HttpGet("current/city/{id}")]
+        public async Task<ActionResult<WeatherResponseDto>> GetCurrentWeatherForCity(int id)
         {
-            var result = await _weatherService.GetWeatherForCityByIdAsync(id);
+            var result = await _weatherService.GetCurrentWeatherAsync(id);
+
+            if (result is null)
+                return BadRequest("Weather not found.");
+
+            return Ok(result);
+        }
+
+        [HttpGet("forecast/city/{id}")]
+        public async Task<ActionResult<ForecastResponseDto>> GetForecastWeatherForCity(int id)
+        {
+            var result = await _weatherService.GetForecastWeatherAsync(id);
 
             if (result is null)
                 return BadRequest("Weather not found.");
