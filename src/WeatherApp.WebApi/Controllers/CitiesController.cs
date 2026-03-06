@@ -15,10 +15,12 @@ namespace WeatherApp.WebApi.Controllers
     public class CitiesController : ControllerBase
     {
         private readonly ICityService _cityService;
+        private readonly ILogger<CitiesController> _logger;
 
-        public CitiesController(ICityService cityService)
+        public CitiesController(ICityService cityService, ILogger<CitiesController> logger)
         {
             _cityService = cityService;
+            _logger = logger;
         }
 
         // id -> geoNameId
@@ -27,8 +29,13 @@ namespace WeatherApp.WebApi.Controllers
         {
             var city = await _cityService.GetCityByIdAsync(id);
 
+            _logger.LogInformation("Getting city with Id {Id}", id);
+
             if (city is null)
+            {
+                _logger.LogWarning("City with Id {Id} was not found", id);
                 return NotFound();
+            }
 
             return Ok(city);
         }

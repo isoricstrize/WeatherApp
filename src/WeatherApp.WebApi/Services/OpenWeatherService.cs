@@ -17,14 +17,15 @@ namespace WeatherApp.WebApi.Services
         private readonly IMemoryCache _cache;
         private readonly string _apiKey;
         private readonly ICityService _cityService;
+        private readonly ILogger<OpenWeatherService> _logger;
 
-        public OpenWeatherService(HttpClient httpClient, IMemoryCache cache, IConfiguration configuration, ICityService cityService)
+        public OpenWeatherService(HttpClient httpClient, IMemoryCache cache, IConfiguration configuration, ICityService cityService, ILogger<OpenWeatherService> logger)
         {
             _httpClient = httpClient;
             _cache = cache;
             _apiKey = configuration["OpenWeather:ApiKey"] ?? throw new InvalidOperationException("OpenWeather API key is missing.");
             _cityService = cityService;
-
+            _logger = logger;
         }
 
         public async Task<WeatherResponseDto?> GetCurrentWeatherAsync(int cityId)
@@ -33,7 +34,7 @@ namespace WeatherApp.WebApi.Services
             string cacheKey = $"weather_{cityId}";
             if (_cache.TryGetValue(cacheKey, out WeatherResponseDto? cachedWeather))
             {
-                Console.WriteLine("Cached weather returned!");
+                _logger.LogInformation("Returning cached weather data.");
                 return cachedWeather;
             }
 
@@ -42,13 +43,14 @@ namespace WeatherApp.WebApi.Services
             if (city is null)
                 return null;
 
+            _logger.LogInformation("Calling external weather API for {City}", city);
+
             var url = $"data/2.5/weather?lat={city.Latitude}&lon={city.Longitude}&appid={_apiKey}";
             var response = await _httpClient.GetAsync(url);
 
             if (!response.IsSuccessStatusCode)
             {
-                var error = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(error);
+                _logger.LogWarning("Weather API failed with status {StatusCode}", response.StatusCode);
                 return null;
             }
 
@@ -79,6 +81,8 @@ namespace WeatherApp.WebApi.Services
 
             _cache.Set(cacheKey, result, cacheOptions);
 
+            _logger.LogInformation("Saving weather data to cache for {City}", city);
+
             return result;
         }
 
@@ -88,7 +92,7 @@ namespace WeatherApp.WebApi.Services
             string cacheKey = $"forecast_{cityId}";
             if (_cache.TryGetValue(cacheKey, out ForecastResponseDto? cachedForecast))
             {
-                Console.WriteLine("Cached forecast returned!");
+                _logger.LogInformation("Returning cached forecast data.");
                 return cachedForecast;
             }
 
@@ -97,14 +101,14 @@ namespace WeatherApp.WebApi.Services
             if (city is null)
                 return null;
 
-            var url = $"data/2.5/forecast?lat={city.Latitude}&lon={city.Longitude}&appid={_apiKey}";
+            _logger.LogInformation("Calling external weather API (forecast) for {City}", city);
 
+            var url = $"data/2.5/forecast?lat={city.Latitude}&lon={city.Longitude}&appid={_apiKey}";
             var response = await _httpClient.GetAsync(url);
 
             if (!response.IsSuccessStatusCode)
             {
-                var error = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(error);
+                _logger.LogWarning("Weather API (forecast) failed with status {StatusCode}", response.StatusCode);
                 return null;
             }
 
@@ -147,6 +151,8 @@ namespace WeatherApp.WebApi.Services
                 .SetSize(1);
 
             _cache.Set(cacheKey, result, cacheOptions);
+
+            _logger.LogInformation("Saving forecast data to cache for {City}", city);
 
             return result;
         }

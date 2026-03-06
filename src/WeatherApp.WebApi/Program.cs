@@ -3,6 +3,7 @@ using WeatherApp.WebApi.Data;
 using Scalar.AspNetCore;
 using WeatherApp.WebApi.Services;
 using WeatherApp.WebApi.Services.Interfaces;
+using WeatherApp.WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,8 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
     app.MapOpenApi();
 }
+
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 
