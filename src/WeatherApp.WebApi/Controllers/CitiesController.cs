@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WeatherApp.Domain.Entities;
 using WeatherApp.WebApi.Data;
+using WeatherApp.WebApi.DTOs;
 using WeatherApp.WebApi.Services.Interfaces;
 
 namespace WeatherApp.WebApi.Controllers
@@ -38,6 +39,17 @@ namespace WeatherApp.WebApi.Controllers
             }
 
             return Ok(city);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<CityDto>>> SearchCities([FromQuery] string search)
+        {
+            if (string.IsNullOrWhiteSpace(search))
+                return BadRequest("Search string is required.");
+
+            var cities = await _cityService.SearchCitiesAsync(search);
+
+            return Ok(cities);
         }
 
     }
