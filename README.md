@@ -17,6 +17,6 @@ Project summaries:
   - Retrieves current weather and forecast data from an external weather API
   - Maps external API responses to clean DTOs
   - Implements in-memory caching (`IMemoryCache`) to reduce external API calls
-  - Provides API documentation using Swagger
+  - Provides API documentation using Scalar
 
 - **Weather Frontend** [TODO] — React application that will consume the Web API and display current weather and forecasts to users.
