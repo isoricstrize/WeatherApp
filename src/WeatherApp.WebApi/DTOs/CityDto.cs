@@ -9,5 +9,6 @@ namespace WeatherApp.WebApi.DTOs
     {
         public int GeoNameId { get; set; }
         public string Name { get; set; } = "";
+        public string CountryCode { get; set; } = "";
     }
 }

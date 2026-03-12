@@ -22,11 +22,13 @@ namespace WeatherApp.WebApi.Services
 
         public async Task<List<CityDto>> SearchCitiesAsync(string searchTerm)
         {
+            searchTerm = searchTerm.Trim().ToLower(); // clean all whitespaces and set all letter to lowercase
+
             return await _dbContext.Cities
-                .Where(c => c.Name.Contains(searchTerm))
+                .Where(c => c.Name.ToLower().Contains(searchTerm)) // city from db also to lowercase
                 .OrderBy(c => c.Name)
                 .Take(10) // limit results
-                .Select(c => new CityDto { GeoNameId = c.GeoNameId, Name = c.Name })
+                .Select(c => new CityDto { GeoNameId = c.GeoNameId, Name = c.Name, CountryCode = c.CountryCode })
                 .ToListAsync();
         }
     }
