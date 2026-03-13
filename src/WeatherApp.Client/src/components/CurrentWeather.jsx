@@ -1,7 +1,8 @@
 import "../styles/CurrentWeather.css";
+import TemperatureToggle from "./TemperatureToggle";
 import { formatTemperatureFromK } from "../utils/weatherUtils";
 
-export default function CurrentWeather({ weather, unit, setUnit }) {
+export default function CurrentWeather({ city, weather, unit, setUnit }) {
   if (!weather) return null;
 
   const iconUrl = `https://openweathermap.org/img/wn/${weather.icon}@2x.png`;
@@ -13,32 +14,10 @@ export default function CurrentWeather({ weather, unit, setUnit }) {
       {/* CITY NAME + TEMP UNIT */}
       <div className="weather-header">
         <h2 className="weather-city">
-          {weather.city}, {weather.country}
+          {city.name}, {city.countryCode}
         </h2>
-
-        {/* Temperature unit toggle */}
-        <div className="unit-toggle">
-          <button
-            className={unit === "C" ? "active" : ""}
-            onClick={() => setUnit("C")}
-          >
-            °C
-          </button>
-          <span>|</span>
-          <button
-            className={unit === "F" ? "active" : ""}
-            onClick={() => setUnit("F")}
-          >
-            °F
-          </button>
-          <span>|</span>
-          <button
-            className={unit === "K" ? "active" : ""}
-            onClick={() => setUnit("K")}
-          >
-            K
-          </button>
-        </div>
+        {/* Toggle component */}
+        <TemperatureToggle unit={unit} setUnit={setUnit} />
       </div>
 
       {/* TWO COLUMN INFO */}

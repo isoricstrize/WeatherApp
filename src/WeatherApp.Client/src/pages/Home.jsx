@@ -5,6 +5,7 @@ import { getCurrentWeather } from "../api/weatherApi.js";
 import CurrentWeather from "../components/CurrentWeather.jsx";
 
 function App() {
+  const [currentCity, setCurrentCity] = useState(null);
   const [currentWeather, setCurrentWeather] = useState(null);
 
   const [unit, setUnit] = useState("C");
@@ -12,7 +13,8 @@ function App() {
   async function handleCitySelect(city) {
     console.log("Choosen city: ", city.name, city.countryCode, city.geoNameId);
 
-    if (city.geoNameId == null) return;
+    if (city == null) return;
+    setCurrentCity(city);
 
     try {
       const response = await getCurrentWeather(city.geoNameId);
@@ -26,7 +28,12 @@ function App() {
   return (
     <div className="home-container">
       <SearchBar onCitySelect={handleCitySelect} />
-      <CurrentWeather weather={currentWeather} unit={unit} setUnit={setUnit} />
+      <CurrentWeather
+        city={currentCity}
+        weather={currentWeather}
+        unit={unit}
+        setUnit={setUnit}
+      />
     </div>
   );
 }
