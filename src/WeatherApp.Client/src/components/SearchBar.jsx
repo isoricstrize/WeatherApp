@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "../styles/SearchBar.css";
-import { searchCities } from "../api/cityApi";
+import { searchCities } from "../api/cityApi.js";
 
 export default function SearchBar({ onCitySelect }) {
   const [query, setQuery] = useState("");
