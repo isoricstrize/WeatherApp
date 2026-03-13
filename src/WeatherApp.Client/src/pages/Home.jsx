@@ -7,6 +7,8 @@ import CurrentWeather from "../components/CurrentWeather.jsx";
 function App() {
   const [currentWeather, setCurrentWeather] = useState(null);
 
+  const [unit, setUnit] = useState("C");
+
   async function handleCitySelect(city) {
     console.log("Choosen city: ", city.name, city.countryCode, city.geoNameId);
 
@@ -24,7 +26,7 @@ function App() {
   return (
     <div className="home-container">
       <SearchBar onCitySelect={handleCitySelect} />
-      <CurrentWeather weather={currentWeather} />
+      <CurrentWeather weather={currentWeather} unit={unit} setUnit={setUnit} />
     </div>
   );
 }

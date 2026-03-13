@@ -1,4 +1,11 @@
 /* CITY NAME CENTERED */
+.weather-header {
+  display: flex;
+  justify-content: center; /* center columns as a block */
+  gap: 60px; /* space between left and right */
+  align-items: center;
+}
+
 .weather-city {
   text-align: center;
   font-size: 22px;
@@ -7,6 +14,31 @@
   margin-top: 25px;
   color: rgba(255, 255, 255, 0.9);
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.unit-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 30px;
+  margin-top: 12px;
+}
+
+.unit-toggle button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.unit-toggle button.active {
+  color: white;
+  text-decoration: underline;
+}
+
+.unit-toggle span {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* TWO COLUMN LAYOUT */
@@ -47,6 +79,16 @@
   margin-top: -20px;
   letter-spacing: -1px;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: flex-start;
+  gap: 2px; /* small space between number and unit */
+}
+
+.temperature .unit {
+  font-size: 24px; /* smaller than number */
+  font-weight: 500; /* lighter */
+  opacity: 0.8; /* slightly faded for less emphasis */
+  margin-top: 26px; /* aligns vertically with number top */
 }
 
 /* RIGHT COLUMN */
