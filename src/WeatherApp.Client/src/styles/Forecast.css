@@ -1,0 +1,61 @@
+.forecast-row {
+  display: flex;
+  justify-content: center; /* center row */
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap; /* keep 5 items in one row */
+}
+
+/* container for each item */
+.forecast-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 10px;
+  border-radius: 10px;
+  min-width: 100px;
+  margin: 0 5px;
+  color: white;
+}
+
+/* date */
+.forecast-date {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+/* icon */
+.forecast-icon {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 5px;
+}
+
+/* temperature */
+.forecast-temp {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.forecast-temp .unit {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-left: 2px;
+}
+
+/* humidity + wind */
+.forecast-detail {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 2px;
+}
+
+.forecast-detail .icon {
+  font-size: 16px;
+}

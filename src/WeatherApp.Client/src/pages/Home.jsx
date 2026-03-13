@@ -1,12 +1,14 @@
 import { useState } from "react";
 import "../styles/Home.css";
 import SearchBar from "../components/SearchBar";
-import { getCurrentWeather } from "../api/weatherApi.js";
+import { getCurrentWeather, getWeatherForecast } from "../api/weatherApi.js";
 import CurrentWeather from "../components/CurrentWeather.jsx";
+import Forecast from "../components/Forecast.jsx";
 
 function App() {
   const [currentCity, setCurrentCity] = useState(null);
   const [currentWeather, setCurrentWeather] = useState(null);
+  const [forecast, setForecast] = useState(null);
 
   const [unit, setUnit] = useState("C");
 
@@ -17,9 +19,13 @@ function App() {
     setCurrentCity(city);
 
     try {
-      const response = await getCurrentWeather(city.geoNameId);
-      console.log("WEATHER DATA", response);
-      setCurrentWeather(response);
+      const currentWeatherData = await getCurrentWeather(city.geoNameId);
+      console.log("CURRENT WEATHER DATA", currentWeatherData);
+      setCurrentWeather(currentWeatherData);
+
+      const forecastData = await getWeatherForecast(city.geoNameId);
+      console.log("FORECAST DATA", forecastData.forecasts);
+      setForecast(forecastData.forecasts);
     } catch (error) {
       console.error(error);
     }
@@ -34,6 +40,7 @@ function App() {
         unit={unit}
         setUnit={setUnit}
       />
+      <Forecast forecastList={forecast} unit={unit} />
     </div>
   );
 }
