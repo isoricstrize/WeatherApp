@@ -118,24 +118,57 @@ namespace WeatherApp.WebApi.Services
             if (forecast is null)
                 return null;
 
-            var dailyForecasts = forecast!.ForecastItems
+            var dailyForecasts = new List<DailyForecastDto>();
+            // Group by date
+            var grouped = forecast.ForecastItems
                 .GroupBy(x => DateTime.Parse(x.DateText).Date)
-                .Select(group =>
-                {
-                    var first = group.First();
+                .OrderBy(g => g.Key) // ensure chronological
+                .Take(5); // take first 5 days only
 
-                    return new DailyForecastDto
+            foreach (var group in grouped)
+            {
+                // Try to find 12:00 forecast
+                var midday = group.FirstOrDefault(x => DateTime.Parse(x.DateText).Hour == 12);
+
+                DailyForecastDto daily;
+
+                if (midday != null)
+                {
+                    // Use 12:00 data
+                    daily = new DailyForecastDto
                     {
                         Date = group.Key,
-                        Temperature = group.Average(x => x.Main.Temp), // or First().Main.Temp
-                        FeelsLike = group.Average(x => x.Main.FeelsLike),
-                        Description = first.Weather.FirstOrDefault()?.Description ?? "",
-                        Humidity = (int)group.Average(x => x.Main.Humidity),
-                        WindSpeed = group.Average(x => x.Wind.Speed),
-                        Icon = first.Weather.FirstOrDefault()?.Icon ?? ""
+                        Temperature = midday.Main.Temp,
+                        FeelsLike = midday.Main.FeelsLike,
+                        Description = midday.Weather.FirstOrDefault()?.Description ?? "",
+                        Humidity = (int)midday.Main.Humidity,
+                        WindSpeed = midday.Wind.Speed,
+                        Icon = midday.Weather.FirstOrDefault()?.Icon ?? ""
                     };
-                })
-                .ToList();
+                }
+                else
+                {
+                    // If no 12:00, use average of main hours (06:00-21:00)
+                    var relevant = group.Where(x => DateTime.Parse(x.DateText).Hour >= 6 && DateTime.Parse(x.DateText).Hour <= 21);
+                    if (!relevant.Any()) relevant = group; // fallback to all intervals
+
+                    daily = new DailyForecastDto
+                    {
+                        Date = group.Key,
+                        Temperature = relevant.Average(x => x.Main.Temp),
+                        FeelsLike = relevant.Average(x => x.Main.FeelsLike),
+                        Description = relevant
+                            .GroupBy(x => x.Weather.FirstOrDefault()?.Description)
+                            .OrderByDescending(g => g.Count())
+                            .FirstOrDefault()?.Key ?? "",
+                        Humidity = (int)relevant.Average(x => x.Main.Humidity),
+                        WindSpeed = relevant.Average(x => x.Wind.Speed),
+                        Icon = relevant.FirstOrDefault()?.Weather.FirstOrDefault()?.Icon ?? ""
+                    };
+                }
+
+                dailyForecasts.Add(daily);
+            }
 
             var result = new ForecastResponseDto
             {
