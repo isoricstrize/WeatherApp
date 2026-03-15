@@ -1,6 +1,8 @@
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+
 export async function searchCities(search) {
   const response = await fetch(
-    `http://localhost:5107/api/Cities?search=${search}`
+    `${API_URL}/Cities?search=${search}`
   );
 
   if (!response.ok) {

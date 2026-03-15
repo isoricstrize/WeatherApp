@@ -12,7 +12,7 @@ import {
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Layout />}>
-      <Route path="/" element={<Home />} /*errorElement={<Error />}*/ />
+      <Route path="/" element={<Home />} errorElement={<Error />} />
     </Route>,
   ),
 );

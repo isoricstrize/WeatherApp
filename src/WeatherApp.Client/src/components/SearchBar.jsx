@@ -2,13 +2,14 @@ import { useState } from "react";
 import "../styles/SearchBar.css";
 import { searchCities } from "../api/cityApi.js";
 
-export default function SearchBar({ onCitySelect }) {
+export default function SearchBar({ onCitySelect, handleError }) {
   const [query, setQuery] = useState("");
   const [cities, setCities] = useState([]);
 
   async function handleChange(e) {
     const value = e.target.value;
     setQuery(value);
+    handleError("");
 
     if (value.length < 2) {
       setCities([]);
@@ -19,7 +20,7 @@ export default function SearchBar({ onCitySelect }) {
       const response = await searchCities(value);
       setCities(response);
     } catch (error) {
-      console.error(error);
+      handleError("Unable to load cities. Please try again later.");
     }
   }
 
