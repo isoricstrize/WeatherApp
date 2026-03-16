@@ -6,19 +6,19 @@ The application allows users to view current weather and 5-day forecasts for cit
 <p align="center">
   <img src="https://img.shields.io/badge/.NET-9-blueviolet?style=for-the-badge" />
   <img src="https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/JavaScript-ES6-yellow?style=for-the-badge" />
   <img src="https://img.shields.io/badge/CSS-UI-blue?style=for-the-badge" />
   <img src="https://img.shields.io/badge/SQLite-Database-blue?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/API-OpenWeatherMap-orange?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Scalar-Docs-purple?style=for-the-badge" />
 </p>
 
 ## Technologies Used
 
 - **.NET 9 / ASP.NET Core Web API** — Backend framework used to build RESTful APIs.
-- **React** — Frontend library used to build the user interface.
+- **React 19** — Frontend library used to build the user interface.
 - **SQLite** — Database used to store city data.
-- **GeoNames Dataset** — Source of city data imported via CLI tool.
-- **OpenWeatherMap API** — External weather data provider.
+- **GeoNames Dataset** — Source of city data imported via CLI tool ([GeoNames](https://www.geonames.org/)).
+- **OpenWeatherMap API** — External weather data provider ([OpenWeatherMap API](https://openweathermap.org/api)).
 - **Scalar** — Interactive API documentation & testing.
 
 ## Architecture
@@ -85,3 +85,43 @@ flowchart TD
 ## WeatherApp Preview
 
 ![WeatherApp Preview](screenshots/preview.png)
+
+## Run Locally
+
+### CLI
+
+The project comes with the `cities1000.txt` file for city data.  
+Run CityDataSeeder to populate the database:
+
+```bash
+cd WeatherApp.CityDataSeeder.Cli
+dotnet run
+```
+
+**Note:** If you want the latest city data, you can download it from here: [GeoNames](https://download.geonames.org/export/dump/)
+
+### Backend
+
+```bash
+cd WeatherApp.WebApi
+dotnet restore
+dotnet run
+```
+
+**OpenWeatherMap API**: The project requires an API key, which is stored using .NET Secret Manager. You can get your own API key here: [OpenWeatherMap API Keys](https://openweathermap.org/api).
+Then add it to the project:
+
+```bash
+dotnet user-secrets init
+dotnet user-secrets set "OpenWeather:ApiKey" "your-api-key"
+```
+
+### Frontend
+
+```bash
+cd WeatherApp.Client
+npm install
+npm run dev
+```
+
+**Note:** Set the correct VITE_API_BASE_URL in .env file and make sure that WebAPI allows requests from your frontend localhost (check the Program.cs file).
