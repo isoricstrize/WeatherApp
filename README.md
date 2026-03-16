@@ -45,7 +45,6 @@ Project summaries:
 
 Diagram:
 
-````markdown
 ```mermaid
 flowchart TD
 
@@ -82,8 +81,7 @@ flowchart TD
     F --> G
     F --> D
 ```
-````
 
-## Screenshots
+## WeatherApp Preview
 
 ![WeatherApp Preview](screenshots/preview.png)
