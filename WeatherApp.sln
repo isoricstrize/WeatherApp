@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherApp.Cli.UnitTests", "tests\WeatherApp.Cli.UnitTests\WeatherApp.Cli.UnitTests.csproj", "{FC9E977B-09E5-4242-A015-DC9BF82B4D83}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherApp.WebApi.UnitTests", "tests\WeatherApp.WebApi.UnitTests\WeatherApp.WebApi.UnitTests.csproj", "{23A3F4F7-E92F-4302-B2B9-BAC6F0EE9DCE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,18 @@ Global
 		{FC9E977B-09E5-4242-A015-DC9BF82B4D83}.Release|x64.Build.0 = Release|Any CPU
 		{FC9E977B-09E5-4242-A015-DC9BF82B4D83}.Release|x86.ActiveCfg = Release|Any CPU
 		{FC9E977B-09E5-4242-A015-DC9BF82B4D83}.Release|x86.Build.0 = Release|Any CPU
+		{23A3F4F7-E92F-4302-B2B9-BAC6F0EE9DCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23A3F4F7-E92F-4302-B2B9-BAC6F0EE9DCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23A3F4F7-E92F-4302-B2B9-BAC6F0EE9DCE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{23A3F4F7-E92F-4302-B2B9-BAC6F0EE9DCE}.Debug|x64.Build.0 = Debug|Any CPU
+		{23A3F4F7-E92F-4302-B2B9-BAC6F0EE9DCE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{23A3F4F7-E92F-4302-B2B9-BAC6F0EE9DCE}.Debug|x86.Build.0 = Debug|Any CPU
+		{23A3F4F7-E92F-4302-B2B9-BAC6F0EE9DCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23A3F4F7-E92F-4302-B2B9-BAC6F0EE9DCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23A3F4F7-E92F-4302-B2B9-BAC6F0EE9DCE}.Release|x64.ActiveCfg = Release|Any CPU
+		{23A3F4F7-E92F-4302-B2B9-BAC6F0EE9DCE}.Release|x64.Build.0 = Release|Any CPU
+		{23A3F4F7-E92F-4302-B2B9-BAC6F0EE9DCE}.Release|x86.ActiveCfg = Release|Any CPU
+		{23A3F4F7-E92F-4302-B2B9-BAC6F0EE9DCE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,5 +96,6 @@ Global
 		{C203E1E6-DD01-4805-993F-43131F11BD78} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{27EA7807-8938-4A9B-AF04-1658AA4B799F} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{FC9E977B-09E5-4242-A015-DC9BF82B4D83} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{23A3F4F7-E92F-4302-B2B9-BAC6F0EE9DCE} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal
