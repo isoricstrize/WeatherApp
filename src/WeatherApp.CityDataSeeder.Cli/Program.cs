@@ -1,5 +1,5 @@
 ﻿using WeatherApp.CityDataSeeder.Cli.Data;
-using WeatherApp.CityDataSeeder.Cli.Seeder;
+using WeatherApp.CityDataSeeder.Cli;
 
 var basePath = Path.Combine(Directory.GetCurrentDirectory(), "../../", "data");
 Directory.CreateDirectory(basePath);

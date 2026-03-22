@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using WeatherApp.CityDataSeeder.Cli.Data;
 using WeatherApp.Domain.Entities;
 
-namespace WeatherApp.CityDataSeeder.Cli.Seeder
+namespace WeatherApp.CityDataSeeder.Cli
 {
     public class CityDataSeeder
     {
