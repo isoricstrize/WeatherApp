@@ -15,11 +15,36 @@ The application allows users to view current weather and 5-day forecasts for cit
 ## Technologies Used
 
 - **.NET 9 / ASP.NET Core Web API** — Backend framework used to build RESTful APIs.
+
 - **React 19** — Frontend library used to build the user interface.
+
 - **SQLite** — Database used to store city data.
+
 - **GeoNames Dataset** — Source of city data imported via CLI tool ([GeoNames](https://www.geonames.org/)).
+
 - **OpenWeatherMap API** — External weather data provider ([OpenWeatherMap API](https://openweathermap.org/api)).
+
 - **Scalar** — Interactive API documentation & testing.
+
+## Key Features
+
+- CLI tool for importing and seeding GeoNames city data
+
+- Integration with external weather API with mapping to DTOs
+
+- In-memory caching to reduce external API calls
+
+- Service layer used to separate business logic from controllers
+
+- RESTful API design with endpoints for cities, weather, and forecasts
+
+- Global exception handling middleware for consistent API error responses
+
+- API documentation with Scalar for easy testing
+
+- Unit tests for CLI parsing logic and Web API service layer using NUnit
+
+- Frontend React interface for searching cities, viewing current weather and 5-day forecasts
 
 ## Architecture
 
